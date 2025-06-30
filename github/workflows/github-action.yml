@@ -1,0 +1,87 @@
+name: github-action
+run-name: ${{ github.actor }} is out building GitHub Actions
+
+on:
+  push:
+    # Pattern matched against refs/tags
+    tags:        
+      - '**' 
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Build Maven Projects
+        run: |
+          mvn clean package -f ./AuthorManagement/pom.xml
+          mvn clean package -f ./SubscriptionManagement/pom.xml
+          mvn clean package -f ./librarymanagement/pom.xml
+          mvn clean package -f ./pointmanagement/pom.xml
+          mvn clean package -f ./ManuscriptPublication/pom.xml
+
+      - name: Docker Build and push for AuthorManagement
+        uses: docker/build-push-action@v4
+        with:
+          context: ./AuthorManagement
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}/authormanagement:latest
+            ghcr.io/${{ github.repository }}/authormanagement:${{ github.ref_name }}
+            
+      - name: Docker Build and push for SubscriptionManagement
+        uses: docker/build-push-action@v4
+        with:
+          context: ./SubscriptionManagement
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}/subscriptionmanagement:latest
+            ghcr.io/${{ github.repository }}/subscriptionmanagement:${{ github.ref_name }}
+            
+      - name: Docker Build and push for Librarymanagement
+        uses: docker/build-push-action@v4
+        with:
+          context: ./librarymanagement
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}/librarymanagement:latest
+            ghcr.io/${{ github.repository }}/librarymanagement:${{ github.ref_name }}
+            
+      - name: Docker Build and push for Pointmanagement
+        uses: docker/build-push-action@v4
+        with:
+          context: ./pointmanagement
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}/pointmanagement:latest
+            ghcr.io/${{ github.repository }}/pointmanagement:${{ github.ref_name }}
+            
+      - name: Docker Build and push for ManuscriptPublication
+        uses: docker/build-push-action@v4
+        with:
+          context: ./ManuscriptPublication
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}/manuscriptpublication:latest
+            ghcr.io/${{ github.repository }}/manuscriptpublication:${{ github.ref_name }}
+            

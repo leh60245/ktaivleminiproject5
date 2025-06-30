@@ -1,0 +1,92 @@
+server:
+  port: 8088
+
+---
+
+spring:
+  profiles: default
+  cloud:
+    gateway:
+#<<< API Gateway / Routes
+      routes:
+        - id: AuthorManagement
+          uri: http://localhost:8082
+          predicates:
+            - Path=/authors/**, /authorStatistics/**
+        - id: SubscriptionManagement
+          uri: http://localhost:8083
+          predicates:
+            - Path=/subscriptions/**, 
+        - id: librarymanagement
+          uri: http://localhost:8084
+          predicates:
+            - Path=/books/**, 
+        - id: pointmanagement
+          uri: http://localhost:8085
+          predicates:
+            - Path=/users/**, /pointExhaustedStatuses/**
+        - id: ManuscriptPublication
+          uri: http://localhost:8086
+          predicates:
+            - Path=/manuscripts/**, /publicationRequests/**, 
+        - id: frontend
+          uri: http://localhost:8080
+          predicates:
+            - Path=/**
+#>>> API Gateway / Routes
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+
+---
+
+spring:
+  profiles: docker
+  cloud:
+    gateway:
+      routes:
+        - id: AuthorManagement
+          uri: http://authorManagement:8080
+          predicates:
+            - Path=/authors/**, 
+        - id: SubscriptionManagement
+          uri: http://subscriptionManagement:8080
+          predicates:
+            - Path=/subscriptions/**, 
+        - id: librarymanagement
+          uri: http://librarymanagement:8080
+          predicates:
+            - Path=/books/**, 
+        - id: pointmanagement
+          uri: http://pointmanagement:8080
+          predicates:
+            - Path=/users/**, 
+        - id: ManuscriptPublication
+          uri: http://manuscriptPublication:8080
+          predicates:
+            - Path=/manuscripts/**, /publicationRequests/**, 
+        - id: frontend
+          uri: http://frontend:8080
+          predicates:
+            - Path=/**
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+server:
+  port: 8080
