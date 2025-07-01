@@ -1,14 +1,12 @@
 package ktaivleminitocode.domain;
 
-import java.time.LocalDate;
-import java.util.*;
-import ktaivleminitocode.domain.*;
+import java.util.Date;
 import ktaivleminitocode.infra.AbstractEvent;
 import lombok.*;
 
-//<<< DDD / Domain Event
 @Data
 @ToString
+@NoArgsConstructor
 public class KtBonusPointsGranted extends AbstractEvent {
 
     private Long userId;
@@ -17,10 +15,8 @@ public class KtBonusPointsGranted extends AbstractEvent {
 
     public KtBonusPointsGranted(User aggregate) {
         super(aggregate);
-    }
-
-    public KtBonusPointsGranted() {
-        super();
+        this.userId = aggregate.getId();
+        this.updatePoints = 5000; // KT 고객 보너스는 정책에 따라 고정
+        this.createdAt = new Date();
     }
 }
-//>>> DDD / Domain Event

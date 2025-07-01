@@ -12,90 +12,70 @@ import ktaivleminitocode.domain.PointDeducted;
 import ktaivleminitocode.domain.PointExhausted;
 import lombok.Data;
 
+// 기존 속성과 이름을 유지한 채, 도메인 이벤트 적용 및 도메인 로직 정제
 @Entity
-@Table(name = "User_table")
-@Data
-//<<< DDD / Aggregate Root
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long userId;
+    private Long id;
 
     private String name;
+    private Integer point;
 
-    private Boolean ktCustomer;
+    private Boolean isKtCustomer;
+    private Boolean subscription;
 
-    private Integer points;
+    protected User() {}
 
-    private Date createdAt;
-
-    public static UserRepository repository() {
-        UserRepository userRepository = PointmanagementApplication.applicationContext.getBean(
-            UserRepository.class
-        );
-        return userRepository;
+    public User(Long id, String name, boolean isKtCustomer) {
+        this.id = id;
+        this.name = name;
+        this.point = 0;
+        this.isKtCustomer = isKtCustomer;
+        this.subscription = false;
     }
 
-    //<<< Clean Arch / Port Method
-    public void placeReadBook(PlaceReadBookCommand placeReadBookCommand) {
-        //implement business logic here:
-
-        ReadBookPlaced readBookPlaced = new ReadBookPlaced(this);
-        readBookPlaced.publishAfterCommit();
+    // 포인트 적립 로직
+    public void earnPoint(int amount) {
+        this.point += amount;
     }
 
-    //>>> Clean Arch / Port Method
-    //<<< Clean Arch / Port Method
-    public void userRegistration(
-        UserRegistrationCommand userRegistrationCommand
-    ) {
-        //implement business logic here:
-
-        UserRegistered userRegistered = new UserRegistered(this);
-        userRegistered.publishAfterCommit();
-        SignupPointsGranted signupPointsGranted = new SignupPointsGranted(this);
-        signupPointsGranted.publishAfterCommit();
-        KtBonusPointsGranted ktBonusPointsGranted = new KtBonusPointsGranted(
-            this
-        );
-        ktBonusPointsGranted.publishAfterCommit();
+    // 포인트 차감 로직
+    public boolean deductPoint(int amount) {
+        if (this.point < amount) {
+            return false;
+        }
+        this.point -= amount;
+        return true;
     }
 
-    //>>> Clean Arch / Port Method
-
-    //<<< Clean Arch / Port Method
-    public static void checkPoint(SubscriptionChecked subscriptionChecked) {
-        //implement business logic here:
-
-        /** Example 1:  new item 
-        User user = new User();
-        repository().save(user);
-
-        PointDeducted pointDeducted = new PointDeducted(user);
-        pointDeducted.publishAfterCommit();
-        PointExhausted pointExhausted = new PointExhausted(user);
-        pointExhausted.publishAfterCommit();
-        */
-
-        /** Example 2:  finding and process
-        
-
-        repository().findById(subscriptionChecked.get???()).ifPresent(user->{
-            
-            user // do something
-            repository().save(user);
-
-            PointDeducted pointDeducted = new PointDeducted(user);
-            pointDeducted.publishAfterCommit();
-            PointExhausted pointExhausted = new PointExhausted(user);
-            pointExhausted.publishAfterCommit();
-
-         });
-        */
-
+    // 포인트가 모두 소진됐는지 여부 확인
+    public boolean isPointExhausted() {
+        return this.point == 0;
     }
-    //>>> Clean Arch / Port Method
 
+    public void registerSubscription() {
+        this.subscription = true;
+    }
+
+    public boolean hasSubscription() {
+        return Boolean.TRUE.equals(this.subscription);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Integer getPoint() {
+        return point;
+    }
+
+    public Boolean getIsKtCustomer() {
+        return isKtCustomer;
+    }
+
+    public Boolean getSubscription() {
+        return subscription;
+    }
 }
-//>>> DDD / Aggregate Root
+

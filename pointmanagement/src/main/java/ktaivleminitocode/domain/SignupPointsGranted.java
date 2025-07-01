@@ -1,14 +1,12 @@
 package ktaivleminitocode.domain;
 
-import java.time.LocalDate;
-import java.util.*;
-import ktaivleminitocode.domain.*;
+import java.util.Date;
 import ktaivleminitocode.infra.AbstractEvent;
 import lombok.*;
 
-//<<< DDD / Domain Event
 @Data
 @ToString
+@NoArgsConstructor
 public class SignupPointsGranted extends AbstractEvent {
 
     private Long userId;
@@ -17,10 +15,8 @@ public class SignupPointsGranted extends AbstractEvent {
 
     public SignupPointsGranted(User aggregate) {
         super(aggregate);
+        this.userId = aggregate.getId();
+        this.updatePoints = 1000; // 일반 회원가입 포인트 정책
+        this.createdAt = new Date();
     }
-
-    public SignupPointsGranted() {
-        super();
-    }
-}
-//>>> DDD / Domain Event
+} 

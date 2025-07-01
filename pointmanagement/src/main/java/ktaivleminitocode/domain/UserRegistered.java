@@ -7,21 +7,16 @@ import ktaivleminitocode.infra.AbstractEvent;
 import lombok.*;
 
 //<<< DDD / Domain Event
-@Data
-@ToString
-public class UserRegistered extends AbstractEvent {
+// 리팩토링된 UserRegistrationCommand.java
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+public class UserRegistrationCommand {
     private Long userId;
-    private String name;
-    private Boolean ktCustomer;
-    private Date createdAt;
-
-    public UserRegistered(User aggregate) {
-        super(aggregate);
-    }
-
-    public UserRegistered() {
-        super();
-    }
+    private String userName;
+    private boolean isKtCustomer;
 }
-//>>> DDD / Domain Event
