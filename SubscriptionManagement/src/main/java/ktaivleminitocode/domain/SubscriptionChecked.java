@@ -13,7 +13,7 @@ public class SubscriptionChecked extends AbstractEvent {
 
     private Long userId;
     private Long bookId;
-    private Boolean isSubsription;
+    private Boolean isSubscription;
 
     public SubscriptionChecked(Subscription aggregate) {
         super(aggregate);
