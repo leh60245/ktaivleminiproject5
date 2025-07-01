@@ -1,19 +1,22 @@
 package ktaivleminitocode.domain;
 
+import java.util.Date;
 import ktaivleminitocode.infra.AbstractEvent;
 import lombok.*;
 
 @Data
 @ToString
 @NoArgsConstructor
-public class SubscriptionChecked extends AbstractEvent {
+public class ReadBookPlaced extends AbstractEvent {
 
     private Long userId;
-    private boolean subscriptionActive;
+    private Long bookId;
+    private Date placedAt;
 
-    public SubscriptionChecked(User aggregate) {
+    public ReadBookPlaced(User aggregate, Long bookId) {
         super(aggregate);
         this.userId = aggregate.getId();
-        this.subscriptionActive = Boolean.TRUE.equals(aggregate.getSubscription());
+        this.bookId = bookId;
+        this.placedAt = new Date();
     }
 } 
