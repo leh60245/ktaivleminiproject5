@@ -8,5 +8,5 @@ import lombok.Data;
 public class RequestSubscriptionCommand {
 
     private Long subscriberId;
-    private SubscriptionPlanType planType;
+//    private SubscriptionPlanType planType;
 }
