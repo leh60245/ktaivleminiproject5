@@ -15,7 +15,7 @@ public class ManuscriptPlaced extends AbstractEvent {
     private Long authorId;
     private String title;
     private String content;
-    private ManuscriptType type;
+//    private ManuscriptType type;
     private ManuscriptStatus status;
     private Date createdDate;
 

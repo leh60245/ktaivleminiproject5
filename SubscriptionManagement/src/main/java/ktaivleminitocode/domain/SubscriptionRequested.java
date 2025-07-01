@@ -12,7 +12,7 @@ import lombok.*;
 public class SubscriptionRequested extends AbstractEvent {
 
     private Long subscriberId;
-    private SubscriptionPlanType planType;
+//    private SubscriptionPlanType planType;
     private Date requestedAt;
 
     public SubscriptionRequested(Subscription aggregate) {
