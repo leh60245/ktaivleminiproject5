@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class PlaceManuscriptCommand {
 
-    private AuthorId authorId;
+    private Long authorId;
     private String title;
     private String content;
 }
