@@ -6,7 +6,11 @@ import lombok.Data;
 
 @Data
 public class RequestSubscriptionCommand {
+    
+    private Long userId;
+    private Date startDate;
+    private Date endDate;
 
-    private Long subscriberId;
-//    private SubscriptionPlanType planType;
+//     private Long subscriberId;
+// //    private SubscriptionPlanType planType;
 }
