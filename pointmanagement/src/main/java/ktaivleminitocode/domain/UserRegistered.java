@@ -1,27 +1,14 @@
-package ktaivleminitocode.domain;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
-import java.time.LocalDate;
-import java.util.*;
-import ktaivleminitocode.domain.*;
-import ktaivleminitocode.infra.AbstractEvent;
-import lombok.*;
-
-//<<< DDD / Domain Event
-@Data
-@ToString
-public class UserRegistered extends AbstractEvent {
-
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserRegistered {
     private Long userId;
-    private String name;
-    private Boolean ktCustomer;
-    private Date createdAt;
 
-    public UserRegistered(User aggregate) {
-        super(aggregate);
-    }
-
-    public UserRegistered() {
-        super();
-    }
-}
-//>>> DDD / Domain Event
+    // 도메인 이벤트의 발행 시각이나 출처 등을 명시하고 싶으면 확장 가능
+    // private LocalDateTime occurredAt;
+    // private String source;
+} 

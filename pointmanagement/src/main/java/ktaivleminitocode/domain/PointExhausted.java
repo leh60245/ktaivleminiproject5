@@ -1,27 +1,20 @@
 package ktaivleminitocode.domain;
 
-import java.time.LocalDate;
-import java.util.*;
-import ktaivleminitocode.domain.*;
+import java.util.Date;
 import ktaivleminitocode.infra.AbstractEvent;
 import lombok.*;
 
-//<<< DDD / Domain Event
 @Data
 @ToString
+@NoArgsConstructor
 public class PointExhausted extends AbstractEvent {
 
     private Long userId;
-    private Integer updatePoints;
-    private Integer points;
     private Date exhaustedAt;
 
     public PointExhausted(User aggregate) {
         super(aggregate);
+        this.userId = aggregate.getId();
+        this.exhaustedAt = new Date();
     }
-
-    public PointExhausted() {
-        super();
-    }
-}
-//>>> DDD / Domain Event
+} 

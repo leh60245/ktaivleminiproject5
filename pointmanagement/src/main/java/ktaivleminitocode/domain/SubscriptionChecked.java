@@ -1,15 +1,20 @@
 package ktaivleminitocode.domain;
 
-import java.util.*;
-import ktaivleminitocode.domain.*;
 import ktaivleminitocode.infra.AbstractEvent;
 import lombok.*;
 
 @Data
 @ToString
+@NoArgsConstructor
 public class SubscriptionChecked extends AbstractEvent {
 
     private Long userId;
-    private Long bookId;
-    private Boolean isSubsription;
-}
+    private boolean subscriptionActive;
+
+    public SubscriptionChecked(User aggregate) {
+        super(aggregate);
+        this.userId = aggregate.getId();
+        this.subscriptionActive = Boolean.TRUE.equals(aggregate.getSubscription());
+    }
+} 
+

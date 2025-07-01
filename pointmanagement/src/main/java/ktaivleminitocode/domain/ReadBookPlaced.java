@@ -1,25 +1,22 @@
 package ktaivleminitocode.domain;
 
-import java.time.LocalDate;
-import java.util.*;
-import ktaivleminitocode.domain.*;
+import java.util.Date;
 import ktaivleminitocode.infra.AbstractEvent;
 import lombok.*;
 
-//<<< DDD / Domain Event
 @Data
 @ToString
+@NoArgsConstructor
 public class ReadBookPlaced extends AbstractEvent {
 
     private Long userId;
     private Long bookId;
+    private Date placedAt;
 
-    public ReadBookPlaced(User aggregate) {
+    public ReadBookPlaced(User aggregate, Long bookId) {
         super(aggregate);
+        this.userId = aggregate.getId();
+        this.bookId = bookId;
+        this.placedAt = new Date();
     }
-
-    public ReadBookPlaced() {
-        super();
-    }
-}
-//>>> DDD / Domain Event
+} 
