@@ -44,3 +44,9 @@ secrets.yml
 node_modules
 .dist/
 .pem
+.env
+*.log
+*.tmp
+*.bak
+*.orig
+*.swp

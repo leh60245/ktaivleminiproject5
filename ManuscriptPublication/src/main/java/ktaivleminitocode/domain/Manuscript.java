@@ -1,19 +1,14 @@
 package ktaivleminitocode.domain;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.time.LocalDate;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 import javax.persistence.*;
+
 import ktaivleminitocode.ManuscriptPublicationApplication;
 import lombok.Data;
 
 @Entity
 @Table(name = "Manuscript_table")
 @Data
-//<<< DDD / Aggregate Root
 public class Manuscript {
 
     @Id
@@ -32,30 +27,48 @@ public class Manuscript {
 
     public static ManuscriptRepository repository() {
         ManuscriptRepository manuscriptRepository = ManuscriptPublicationApplication.applicationContext.getBean(
-            ManuscriptRepository.class
+                ManuscriptRepository.class
         );
         return manuscriptRepository;
     }
 
-    //<<< Clean Arch / Port Method
+    // 원고 등록(생성)용 메서드 - command로 값 할당, 상태 설정, 저장, 이벤트 발행
     public void placeManuscript(PlaceManuscriptCommand placeManuscriptCommand) {
-        //implement business logic here:
+        this.title = placeManuscriptCommand.getTitle();
+        this.content = placeManuscriptCommand.getContent();
+        this.authorId = placeManuscriptCommand.getAuthorId();
+        this.createdDate = new Date();
+        this.status = ManuscriptStatus.DRAFT;
 
-        ManuscriptPlaced manuscriptPlaced = new ManuscriptPlaced(this);
-        manuscriptPlaced.publishAfterCommit();
+        // 저장
+        repository().save(this);
+
+        // 이벤트 발행
+        ManuscriptPlaced event = new ManuscriptPlaced(this);
+        event.publishAfterCommit();
     }
 
-    //>>> Clean Arch / Port Method
-    //<<< Clean Arch / Port Method
-    public void publishingRequest(
-        PublishingRequestCommand publishingRequestCommand
-    ) {
-        //implement business logic here:
+    // 원고 배치(상태만 변경)용 메서드 - 값은 건드리지 않고 상태만 변경
+    public void placeManuscript() {
+        this.status = ManuscriptStatus.DRAFT;
 
-        PublishingRequested publishingRequested = new PublishingRequested(this);
-        publishingRequested.publishAfterCommit();
+        // 저장
+        repository().save(this);
+
+        // 이벤트 발행
+        ManuscriptPlaced event = new ManuscriptPlaced(this);
+        event.publishAfterCommit();
     }
-    //>>> Clean Arch / Port Method
 
+    public void requestPublication() {
+        // 상태 변경
+        this.status = ManuscriptStatus.REQUESTED;
+
+        // 저장
+        repository().save(this);
+
+        // 이벤트 발행
+        PublicationRequested event = new PublicationRequested(this);
+        event.publishAfterCommit();
+    }
 }
-//>>> DDD / Aggregate Root

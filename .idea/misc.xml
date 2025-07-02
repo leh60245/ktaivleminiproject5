@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/maven-repo/repository/antlr/antlr/2.7.7/antlr-2.7.7.pom" />
+        <option value="$PROJECT_DIR$/maven-repo/repository/junit/junit/4.13/junit-4.13.pom" />
+        <option value="$PROJECT_DIR$/maven-repo/repository/commons-io/commons-io/2.2/commons-io-2.2.pom" />
+        <option value="$PROJECT_DIR$/maven-repo/repository/commons-io/commons-io/2.4/commons-io-2.4.pom" />
+        <option value="$PROJECT_DIR$/maven-repo/repository/commons-io/commons-io/2.5/commons-io-2.5.pom" />
+        <option value="$PROJECT_DIR$/maven-repo/repository/commons-lang/commons-lang/2.6/commons-lang-2.6.pom" />
+        <option value="$PROJECT_DIR$/maven-repo/repository/commons-codec/commons-codec/1.14/commons-codec-1.14.pom" />
+        <option value="$PROJECT_DIR$/maven-repo/repository/commons-fileupload/commons-fileupload/1.4/commons-fileupload-1.4.pom" />
+        <option value="$PROJECT_DIR$/maven-repo/repository/commons-configuration/commons-configuration/1.8/commons-configuration-1.8.pom" />
+        <option value="$PROJECT_DIR$/maven-repo/repository/backport-util-concurrent/backport-util-concurrent/3.1/backport-util-concurrent-3.1.pom" />
+        <option value="$PROJECT_DIR$/pointmanagement/pom.xml" />
+        <option value="$PROJECT_DIR$/AuthorManagement/pom.xml" />
+        <option value="$PROJECT_DIR$/librarymanagement/pom.xml" />
+        <option value="$PROJECT_DIR$/ManuscriptPublication/pom.xml" />
+        <option value="$PROJECT_DIR$/SubscriptionManagement/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="17" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
+</project>

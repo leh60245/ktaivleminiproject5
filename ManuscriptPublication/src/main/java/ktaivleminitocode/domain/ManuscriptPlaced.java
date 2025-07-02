@@ -1,8 +1,6 @@
 package ktaivleminitocode.domain;
 
-import java.time.LocalDate;
-import java.util.*;
-import ktaivleminitocode.domain.*;
+import java.util.Date;
 import ktaivleminitocode.infra.AbstractEvent;
 import lombok.*;
 
@@ -19,8 +17,15 @@ public class ManuscriptPlaced extends AbstractEvent {
     private ManuscriptStatus status;
     private Date createdDate;
 
+
     public ManuscriptPlaced(Manuscript aggregate) {
         super(aggregate);
+        this.manuscriptId = aggregate.getManuscriptId();
+        this.authorId = aggregate.getAuthorId();
+        this.title = aggregate.getTitle();
+        this.content = aggregate.getContent();
+        this.status = aggregate.getStatus();
+        this.createdDate = aggregate.getCreatedDate();
     }
 
     public ManuscriptPlaced() {

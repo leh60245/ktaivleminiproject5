@@ -40,6 +40,11 @@ spring:
 #>>> EDA / Topic Name
           contentType: application/json
 
+openai:
+  api:
+    url: ${OPENAI_API_URL:https://api.openai.com}
+    key: ${OPENAI_API_KEY}
+
 logging:
   level:
     org.hibernate.type: trace
@@ -80,5 +85,3 @@ spring:
         event-out:
           destination: ktaivleminitocode
           contentType: application/json
-
-
