@@ -1,81 +1,116 @@
 package ktaivleminitocode.domain;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.time.LocalDate;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 import javax.persistence.*;
-import ktaivleminitocode.PointmanagementApplication;
-import ktaivleminitocode.domain.PointDeducted;
-import ktaivleminitocode.domain.PointExhausted;
-import lombok.Data;
 
-// 기존 속성과 이름을 유지한 채, 도메인 이벤트 적용 및 도메인 로직 정제
 @Entity
 public class User {
 
     @Id
-    private Long id;
+    private Long userId;
 
     private String name;
-    private Integer point;
+    private Integer points;
+    private Boolean ktCustomer;
+    private Date createdAt;
 
-    private Boolean isKtCustomer;
-    private Boolean subscription;
+    // Optional subscription field (needed for getSubscription())
+    private String subscription;
 
     protected User() {}
 
-    public User(Long id, String name, boolean isKtCustomer) {
-        this.id = id;
+    public User(Long userId, String name, boolean ktCustomer) {
+        this.userId = userId;
         this.name = name;
-        this.point = 0;
-        this.isKtCustomer = isKtCustomer;
-        this.subscription = false;
+        this.points = 0;
+        this.ktCustomer = ktCustomer;
+        this.createdAt = new Date();
+    }
+    //포인트 확인로직
+    public void checkPoint(SubscriptionChecked event) {
+        int requiredPoints = event.getRequiredPoints();
+        boolean success = this.deductPoint(requiredPoints);
+
+        if (!success) {
+            PointExhausted pointExhausted = new PointExhausted(this);
+            pointExhausted.publishAfterCommit();
+        } else {
+            PointDeducted pointDeducted = new PointDeducted(this, requiredPoints);
+            pointDeducted.publishAfterCommit();
+        }
+    }
+    //성공실패 로직이 없어 구현
+    public void placeReadBook(PlaceReadBookCommand command) {
+        int cost = command.getPointCost();
+        boolean success = this.deductPoint(cost);
+
+        if (success) {
+            ReadBookPlaced placed = new ReadBookPlaced(this);
+            placed.setBookId(command.getBookId());
+            placed.setPointsUsed(cost);
+            placed.publishAfterCommit();
+        } else {
+            BookReadFailed failed = new BookReadFailed(this);
+            failed.setBookId(command.getBookId());
+            failed.setRequiredPoints(cost);
+            failed.publishAfterCommit();
+        }
+    }
+    
+    public void userRegistration(UserRegistrationCommand command) {
+        this.earnPoint(1000);
+
+        if (command.isKtCustomer()) {
+            this.earnPoint(5000);
+        }
     }
 
-    // 포인트 적립 로직
     public void earnPoint(int amount) {
-        this.point += amount;
+        this.points += amount;
     }
 
-    // 포인트 차감 로직
     public boolean deductPoint(int amount) {
-        if (this.point < amount) {
+        if (this.points < amount) {
             return false;
         }
-        this.point -= amount;
+        this.points -= amount;
         return true;
     }
 
-    // 포인트가 모두 소진됐는지 여부 확인
     public boolean isPointExhausted() {
-        return this.point == 0;
+        return this.points == 0;
     }
 
-    public void registerSubscription() {
-        this.subscription = true;
-    }
-
-    public boolean hasSubscription() {
-        return Boolean.TRUE.equals(this.subscription);
+    // Getter 메서드
+    public Long getUserId() {
+        return userId;
     }
 
     public Long getId() {
-        return id;
+        return userId; // alias for use in events
     }
 
-    public Integer getPoint() {
-        return point;
+    public String getName() {
+        return name;
     }
 
-    public Boolean getIsKtCustomer() {
-        return isKtCustomer;
+    public Integer getPoints() {
+        return points;
     }
 
-    public Boolean getSubscription() {
+    public Boolean getKtCustomer() {
+        return ktCustomer;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public String getSubscription() {
         return subscription;
     }
+    public Integer getPoint() {
+    return getPoints();
+    }
 }
-
