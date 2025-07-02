@@ -1,12 +1,10 @@
 package ktaivleminitocode.domain;
 
-import java.time.LocalDate;
-import java.util.*;
-import ktaivleminitocode.domain.*;
+import java.util.Date;
 import ktaivleminitocode.infra.AbstractEvent;
-import lombok.*;
+import lombok.Data;
+import lombok.ToString;
 
-//<<< DDD / Domain Event
 @Data
 @ToString
 public class PublishingRequested extends AbstractEvent {
@@ -20,10 +18,13 @@ public class PublishingRequested extends AbstractEvent {
 
     public PublishingRequested(Manuscript aggregate) {
         super(aggregate);
+        this.manuscriptId = aggregate.getManuscriptId();
+        this.authorId     = aggregate.getAuthorId();
+        this.title        = aggregate.getTitle();
+        this.content      = aggregate.getContent();
+        this.status       = aggregate.getStatus();
+        this.createdDate  = aggregate.getCreatedDate();
     }
 
-    public PublishingRequested() {
-        super();
-    }
+    public PublishingRequested() { super(); }
 }
-//>>> DDD / Domain Event

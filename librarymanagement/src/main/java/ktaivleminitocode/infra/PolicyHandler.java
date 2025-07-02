@@ -1,9 +1,5 @@
 package ktaivleminitocode.infra;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import javax.naming.NameParser;
-import javax.naming.NameParser;
 import javax.transaction.Transactional;
 import ktaivleminitocode.config.kafka.KafkaProcessor;
 import ktaivleminitocode.domain.*;
@@ -12,7 +8,6 @@ import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
-//<<< Clean Arch / Inbound Adaptor
 @Service
 @Transactional
 public class PolicyHandler {
@@ -20,24 +15,46 @@ public class PolicyHandler {
     @Autowired
     BookRepository bookRepository;
 
-    @StreamListener(KafkaProcessor.INPUT)
-    public void whatever(@Payload String eventString) {}
+    /* ① 원고 출간 준비(PublishingRequested) 수신 → Book 생성 */
+    @StreamListener(
+        value = KafkaProcessor.INPUT,
+        condition = "headers['type']=='PublishingRequested'"
+    )
+    public void wheneverPublishingRequested_CreateBook(
+        @Payload PublishingRequested event
+    ) {
+        if (!event.validate()) return;
+
+        System.out.println(
+            "\n##### PublishingRequested received : " + event + " #####\n"
+        );
+
+        /* Book 애그리게이트 생성 */
+        Book book = new Book();
+        book.setAuthorId(event.getAuthorId());
+        book.setTitle(event.getTitle());
+        book.setContent(event.getContent());
+        book.setPublishedDate(event.getCreatedDate());
+        book.setReadCount(0);
+        book.setBestsellerBadge(false);
+
+        bookRepository.save(book);
+
+        /* (선택) BookPublished 이벤트 발행 */
+        BookPublished published = new BookPublished(book);
+        published.publishAfterCommit();
+    }
+
+    /* 기존 리스너들 그대로 유지 ↓↓↓ */
 
     @StreamListener(
         value = KafkaProcessor.INPUT,
         condition = "headers['type']=='PublicationProcessingStarted'"
     )
     public void wheneverPublicationProcessingStarted_RegisterBook(
-        @Payload PublicationProcessingStarted publicationProcessingStarted
+        @Payload PublicationProcessingStarted event
     ) {
-        PublicationProcessingStarted event = publicationProcessingStarted;
-        System.out.println(
-            "\n\n##### listener RegisterBook : " +
-            publicationProcessingStarted +
-            "\n\n"
-        );
-
-        // Sample Logic //
+        System.out.println("\n##### RegisterBook : " + event + " #####\n");
         Book.registerBook(event);
     }
 
@@ -45,15 +62,7 @@ public class PolicyHandler {
         value = KafkaProcessor.INPUT,
         condition = "headers['type']=='PointDeducted'"
     )
-    public void wheneverPointDeducted_ReadBook(
-        @Payload PointDeducted pointDeducted
-    ) {
-        PointDeducted event = pointDeducted;
-        System.out.println(
-            "\n\n##### listener ReadBook : " + pointDeducted + "\n\n"
-        );
-
-        // Sample Logic //
+    public void wheneverPointDeducted_ReadBook(@Payload PointDeducted event) {
         Book.readBook(event);
     }
 
@@ -62,15 +71,22 @@ public class PolicyHandler {
         condition = "headers['type']=='SubscriptionChecked'"
     )
     public void wheneverSubscriptionChecked_ReadBook(
-        @Payload SubscriptionChecked subscriptionChecked
+        @Payload SubscriptionChecked event
     ) {
-        SubscriptionChecked event = subscriptionChecked;
-        System.out.println(
-            "\n\n##### listener ReadBook : " + subscriptionChecked + "\n\n"
-        );
-
-        // Sample Logic //
         Book.readBook(event);
     }
+    
+    @StreamListener(
+        value     = KafkaProcessor.INPUT,
+        condition = "headers['type']=='PublishingRequested'"
+    )
+    public void wheneverPublishingRequested_RegisterBook(
+            @Payload PublishingRequested event) {
+
+        if (!event.validate()) return;          // validate() 메서드는 DTO에 간단히 구현
+
+        System.out.println("### PublishingRequested : " + event);
+
+        Book.registerBook(event);
+    }
 }
-//>>> Clean Arch / Inbound Adaptor

@@ -6,8 +6,13 @@ import lombok.Data;
 
 @Data
 public class PublishingRequestCommand {
-
-    private Long authorId;
-    private String title;
-    private String content;
+    private Long manuscriptId;
 }
+
+// @Data
+// public class PublishingRequestCommand {
+
+//     private Long authorId;
+//     private String title;
+//     private String content;
+// }

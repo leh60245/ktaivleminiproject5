@@ -1,57 +1,43 @@
 package ktaivleminitocode.infra;
 
-import java.util.Optional;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import ktaivleminitocode.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-//<<< Clean Arch / Inbound Adaptor
 
 @RestController
-// @RequestMapping(value="/manuscripts")
 @Transactional
 public class ManuscriptController {
 
     @Autowired
     ManuscriptRepository manuscriptRepository;
 
-    @RequestMapping(
+    /* --- 원고 등록 --- */
+    @PostMapping(
         value = "/manuscripts/placemanuscript",
-        method = RequestMethod.POST,
-        produces = "application/json;charset=UTF-8"
-    )
+        produces = "application/json;charset=UTF-8")
     public Manuscript placeManuscript(
-        HttpServletRequest request,
-        HttpServletResponse response,
-        @RequestBody PlaceManuscriptCommand placeManuscriptCommand
-    ) throws Exception {
-        System.out.println("##### /manuscript/placeManuscript  called #####");
-        Manuscript manuscript = new Manuscript();
-        manuscript.placeManuscript(placeManuscriptCommand);
-        manuscriptRepository.save(manuscript);
-        return manuscript;
+        @RequestBody PlaceManuscriptCommand cmd) {
+
+        Manuscript m = new Manuscript();
+        m.placeManuscript(cmd);
+        manuscriptRepository.save(m);
+        return m;
     }
 
-    @RequestMapping(
+    /* --- 출간 요청 --- */
+    @PostMapping(
         value = "/manuscripts/publishingrequest",
-        method = RequestMethod.POST,
-        produces = "application/json;charset=UTF-8"
-    )
+        produces = "application/json;charset=UTF-8")
     public Manuscript publishingRequest(
-        HttpServletRequest request,
-        HttpServletResponse response,
-        @RequestBody PublishingRequestCommand publishingRequestCommand
-    ) throws Exception {
-        System.out.println("##### /manuscript/publishingRequest  called #####");
-        Manuscript manuscript = new Manuscript();
-        manuscript.publishingRequest(publishingRequestCommand);
-        manuscriptRepository.save(manuscript);
-        return manuscript;
+        @RequestBody PublishingRequestCommand cmd) {
+
+        Manuscript m = manuscriptRepository.findById(cmd.getManuscriptId())
+            .orElseThrow(() -> new IllegalArgumentException(
+                "해당 ID의 원고가 존재하지 않습니다."));
+
+        m.publishingRequest();
+        manuscriptRepository.save(m);
+        return m;
     }
 }
-//>>> Clean Arch / Inbound Adaptor

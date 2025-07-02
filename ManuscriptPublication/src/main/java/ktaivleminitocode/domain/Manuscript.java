@@ -1,11 +1,6 @@
 package ktaivleminitocode.domain;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.time.LocalDate;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 import javax.persistence.*;
 import ktaivleminitocode.ManuscriptPublicationApplication;
 import lombok.Data;
@@ -13,7 +8,6 @@ import lombok.Data;
 @Entity
 @Table(name = "Manuscript_table")
 @Data
-//<<< DDD / Aggregate Root
 public class Manuscript {
 
     @Id
@@ -21,48 +15,43 @@ public class Manuscript {
     private Long manuscriptId;
 
     private String title;
-
     private String content;
-
     private ManuscriptStatus status;
-
     private Date createdDate;
-
     private Long authorId;
 
+    /* ------------- 공통 ----------- */
     public static ManuscriptRepository repository() {
-        ManuscriptRepository manuscriptRepository = ManuscriptPublicationApplication.applicationContext.getBean(
-            ManuscriptRepository.class
-        );
-        return manuscriptRepository;
+        return ManuscriptPublicationApplication.applicationContext.getBean(
+            ManuscriptRepository.class);
     }
 
-    //<<< Clean Arch / Port Method
-    public void placeManuscript(PlaceManuscriptCommand placeManuscriptCommand) {
-        //implement business logic here:
-
+    /* ------------- 원고 등록 ----------- */
+    public void placeManuscript(PlaceManuscriptCommand c) {
         this.authorId    = c.getAuthorId();
         this.title       = c.getTitle();
         this.content     = c.getContent();
-        this.status      = ManuscriptStatus.PLACED;   // 임의 예시
+        this.status      = ManuscriptStatus.PLACED;
         this.createdDate = new Date();
 
-        ManuscriptPlaced manuscriptPlaced = new ManuscriptPlaced(this);
-        manuscriptPlaced.publishAfterCommit();
+        ManuscriptPlaced e = new ManuscriptPlaced(this);
+        e.publishAfterCommit();
     }
 
-    //>>> Clean Arch / Port Method
-    //<<< Clean Arch / Port Method
-    public void publishingRequest(
-        PublishingRequestCommand publishingRequestCommand
-    ) {
-        //implement business logic here:
+    /* ------------- 출간 요청 ----------- */
+    public void publishingRequest() {
+
+        // ① 상태 검증
+        if (this.status != ManuscriptStatus.PLACED) {
+            throw new IllegalStateException(
+                "PLACED 상태의 원고만 출간 요청할 수 있습니다.");
+        }
+
+        // ② 상태 변경
         this.status = ManuscriptStatus.PUBLISHING_REQUESTED;
 
-        PublishingRequested publishingRequested = new PublishingRequested(this);
-        publishingRequested.publishAfterCommit();
+        // ③ 이벤트 발행
+        PublishingRequested e = new PublishingRequested(this);
+        e.publishAfterCommit();
     }
-    //>>> Clean Arch / Port Method
-
 }
-//>>> DDD / Aggregate Root
