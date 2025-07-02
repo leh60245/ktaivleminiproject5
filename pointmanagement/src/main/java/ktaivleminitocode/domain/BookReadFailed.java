@@ -3,28 +3,28 @@ package ktaivleminitocode.domain;
 import java.util.Date;
 import ktaivleminitocode.infra.AbstractEvent;
 import lombok.*;
-
+// 필요한 빌드 책읽기 실패 이벤트생성
 @Data
 @ToString
 @NoArgsConstructor
-public class ReadBookPlaced extends AbstractEvent {
+public class BookReadFailed extends AbstractEvent {
 
     private Long userId;
     private Long bookId;
-    private Integer pointsUsed;
-    private Date placedAt;
+    private Integer requiredPoints;
+    private Date failedAt;
 
-    public ReadBookPlaced(User aggregate) {
+    public BookReadFailed(User aggregate) {
         super(aggregate);
         this.userId = aggregate.getId();
-        this.placedAt = new Date();
+        this.failedAt = new Date();
     }
 
     public void setBookId(Long bookId) {
         this.bookId = bookId;
     }
 
-    public void setPointsUsed(Integer pointsUsed) {
-        this.pointsUsed = pointsUsed;
+    public void setRequiredPoints(Integer requiredPoints) {
+        this.requiredPoints = requiredPoints;
     }
 }

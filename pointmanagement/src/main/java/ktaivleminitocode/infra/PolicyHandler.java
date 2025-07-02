@@ -3,7 +3,6 @@ package ktaivleminitocode.infra;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.naming.NameParser;
-import javax.naming.NameParser;
 import javax.transaction.Transactional;
 import ktaivleminitocode.config.kafka.KafkaProcessor;
 import ktaivleminitocode.domain.*;
@@ -11,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
-
+//팔요한 폴리시 핸들링연결
 //<<< Clean Arch / Inbound Adaptor
 @Service
 @Transactional
@@ -43,20 +42,22 @@ public class PolicyHandler {
 
     }
 
-    @StreamListener(
-        value = KafkaProcessor.INPUT,
-        condition = "headers['type']=='SubscriptionChecked'"
-    )
-    public void wheneverSubscriptionChecked_CheckPoint(
-        @Payload SubscriptionChecked subscriptionChecked
-    ) {
-        SubscriptionChecked event = subscriptionChecked;
-        System.out.println(
-            "\n\n##### listener CheckPoint : " + subscriptionChecked + "\n\n"
-        );
+   @StreamListener(
+    value = KafkaProcessor.INPUT,
+    condition = "headers['type']=='SubscriptionChecked'"
+)
+public void wheneverSubscriptionChecked_CheckPoint(
+    @Payload SubscriptionChecked subscriptionChecked
+) {
+    SubscriptionChecked event = subscriptionChecked;
+    System.out.println(
+        "\n\n##### listener CheckPoint : " + subscriptionChecked + "\n\n"
+    );
 
-        // Sample Logic //
-        User.checkPoint(event);
-    }
+    // ✅ 사용자 ID로 User 인스턴스를 조회하고, checkPoint 메서드 호출
+    userRepository.findById(event.getUserId()).ifPresent(user -> {
+        user.checkPoint(event);
+    });
+}
 }
 //>>> Clean Arch / Inbound Adaptor
