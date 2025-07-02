@@ -130,22 +130,22 @@ public class Book {
     //<<< Clean Arch / Port Method
     // '구독 확인됨' 이벤트(외부 바운더리: SubscriptionManagement)를 받아 '도서 열람' 처리
     public static void readBook(SubscriptionChecked subscriptionChecked) {
-        //implement business logic here:
-        // 1. SubscriptionChecked 이벤트의 bookId를 사용하여 Book 애그리게이트를 찾음
-        repository().findById(subscriptionChecked.getBookId()).ifPresent(book -> {
-            // 2. 비즈니스 로직: 조회수 증가 (구독 확인 후 열람이므로)
-            // (구독 여부에 따른 추가 비즈니스 로직이 있다면 여기에 추가)
-            book.setReadCount(book.getReadCount() + 1);
+        // 구독 상태 확인
+        if (!Boolean.TRUE.equals(subscriptionChecked.getIsSubscription())) {
+            System.out.println(" 구독 안됨 - 열람 차단");
+            return; // 구독이 없으면 열람 불가
+        }
 
-            // 3. 변경된 Book 애그리게이트 저장
+        repository().findById(subscriptionChecked.getBookId()).ifPresent(book -> {
+            // 구독 확인된 사용자에 한해 열람 처리
+            book.setReadCount(book.getReadCount() + 1);
             repository().save(book);
 
-            // 4. '도서 열람 수 증가됨' 이벤트 발행
-            BookReadCountIncreased bookReadCountIncreased = new BookReadCountIncreased(book);
-            bookReadCountIncreased.publishAfterCommit();
+            BookReadCountIncreased event = new BookReadCountIncreased(book);
+            event.publishAfterCommit();
+
+            System.out.println(" 구독 확인됨 - 열람 기록 처리 완료");
         });
-        // 만약 bookId에 해당하는 책을 찾을 수 없으면 아무것도 하지 않음 (예외 처리도 가능)
-        
     }
     //>>> Clean Arch / Port Method
 

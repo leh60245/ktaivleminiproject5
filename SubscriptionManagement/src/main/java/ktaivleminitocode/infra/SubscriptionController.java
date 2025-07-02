@@ -76,5 +76,17 @@ public class SubscriptionController {
         subscriptionRepository.save(subscription);
         return subscription;
     }
+    @RequestMapping(
+        value = "/test/publish/readbook",
+        method = RequestMethod.POST,
+        produces = "application/json;charset=UTF-8"
+    )
+    public String testPublishReadBook(@RequestBody ReadBookPlaced readBookPlaced) {
+        System.out.println("##### /test/publish/readbook called #####");
+        readBookPlaced.setEventType("ReadBookPlaced");
+        readBookPlaced.publish(); // Kafka로 메시지 발행
+        return "ReadBookPlaced event published";
+    }
+
 }
 //>>> Clean Arch / Inbound Adaptor
