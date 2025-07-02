@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/AuthorManagement/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ManuscriptPublication/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/SubscriptionManagement/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/gateway/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/librarymanagement/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/maven-repo/repository/commons-codec/commons-codec/1.14" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/maven-repo/repository/commons-codec/commons-codec/1.14/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/maven-repo/repository/commons-codec/commons-codec/1.14/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/maven-repo/repository/commons-configuration/commons-configuration/1.8" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/maven-repo/repository/commons-configuration/commons-configuration/1.8/src/main/java" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/maven-repo/repository/commons-configuration/commons-configuration/1.8/src/main/resources" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/maven-repo/repository/commons-fileupload/commons-fileupload/1.4" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/maven-repo/repository/commons-fileupload/commons-fileupload/1.4/src/main/java" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/maven-repo/repository/commons-fileupload/commons-fileupload/1.4/src/main/resources" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/maven-repo/repository/commons-io/commons-io/2.2" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/maven-repo/repository/commons-io/commons-io/2.2/src/main/java" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/maven-repo/repository/commons-io/commons-io/2.2/src/main/resources" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/maven-repo/repository/commons-io/commons-io/2.4" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/maven-repo/repository/commons-io/commons-io/2.4/src/main/java" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/maven-repo/repository/commons-io/commons-io/2.4/src/main/resources" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/maven-repo/repository/commons-io/commons-io/2.5" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/maven-repo/repository/commons-io/commons-io/2.5/src/main/java" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/maven-repo/repository/commons-io/commons-io/2.5/src/main/resources" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/maven-repo/repository/commons-lang/commons-lang/2.6" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/maven-repo/repository/commons-lang/commons-lang/2.6/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/maven-repo/repository/junit/junit/4.13" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/maven-repo/repository/junit/junit/4.13/src/main/java" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/maven-repo/repository/junit/junit/4.13/src/main/resources" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/pointmanagement/src/main/java" charset="UTF-8" />
+  </component>
+</project>

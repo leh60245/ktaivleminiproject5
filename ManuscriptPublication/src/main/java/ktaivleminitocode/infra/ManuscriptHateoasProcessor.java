@@ -23,9 +23,9 @@ public class ManuscriptHateoasProcessor
             Link
                 .of(
                     model.getRequiredLink("self").getHref() +
-                    "/publishingrequest"
+                    "/publication-request"
                 )
-                .withRel("publishingrequest")
+                .withRel("publication-request")
         );
 
         return model;

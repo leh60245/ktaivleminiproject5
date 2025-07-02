@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="commons-configuration" />
+        <module name="pointmanagement" />
+        <module name="junit" />
+        <module name="boot-camp-gateway" />
+        <module name="commons-io (1)" />
+        <module name="commons-io (2)" />
+        <module name="antlr" />
+        <module name="backport-util-concurrent" />
+        <module name="commons-io" />
+        <module name="commons-lang" />
+        <module name="librarymanagement" />
+        <module name="commons-codec" />
+        <module name="ManuscriptPublication" />
+        <module name="SubscriptionManagement" />
+        <module name="commons-fileupload" />
+        <module name="AuthorManagement" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="AuthorManagement" options="-parameters" />
+      <module name="ManuscriptPublication" options="-parameters" />
+      <module name="SubscriptionManagement" options="-parameters" />
+      <module name="boot-camp-gateway" options="-parameters" />
+      <module name="junit" options="-Xlint:unchecked -Xdoclint:accessibility,reference,syntax" />
+      <module name="librarymanagement" options="-parameters" />
+      <module name="pointmanagement" options="-parameters" />
+    </option>
+  </component>
+</project>
