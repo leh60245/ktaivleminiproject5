@@ -33,7 +33,8 @@ public class BookController {
         System.out.println(
             "##### /book/designateBookAsBestseller  called #####"
         );
-        Book book = new Book();
+        Book book = bookRepository.findById(cmd.getBookId())
+        .orElseThrow(() -> new IllegalArgumentException("Book not found"));
         book.designateBookAsBestseller(designateBookAsBestsellerCommand);
         bookRepository.save(book);
         return book;

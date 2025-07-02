@@ -3,3 +3,9 @@ tasks:
   - init: |
       nvm install 14.19.0 && 
       nvm use 14.19.0
+
+ports:
+  - port: 9092
+    onOpen: ignore
+  - port: 2181
+    onOpen: ignore      

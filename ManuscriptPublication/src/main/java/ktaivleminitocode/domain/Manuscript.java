@@ -41,6 +41,12 @@ public class Manuscript {
     public void placeManuscript(PlaceManuscriptCommand placeManuscriptCommand) {
         //implement business logic here:
 
+        this.authorId    = c.getAuthorId();
+        this.title       = c.getTitle();
+        this.content     = c.getContent();
+        this.status      = ManuscriptStatus.PLACED;   // 임의 예시
+        this.createdDate = new Date();
+
         ManuscriptPlaced manuscriptPlaced = new ManuscriptPlaced(this);
         manuscriptPlaced.publishAfterCommit();
     }
@@ -51,6 +57,7 @@ public class Manuscript {
         PublishingRequestCommand publishingRequestCommand
     ) {
         //implement business logic here:
+        this.status = ManuscriptStatus.PUBLISHING_REQUESTED;
 
         PublishingRequested publishingRequested = new PublishingRequested(this);
         publishingRequested.publishAfterCommit();
