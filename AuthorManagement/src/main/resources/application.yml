@@ -7,7 +7,7 @@ spring:
 ---
 
 spring:
-  profiles: default
+  profiles: docker
   jpa:
     properties:
       hibernate:
@@ -18,7 +18,7 @@ spring:
     stream:
       kafka:
         binder:
-          brokers: localhost:9092
+          brokers: my-kafka:29092
         streams:
           binder:
             configuration:
