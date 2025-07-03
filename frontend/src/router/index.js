@@ -10,7 +10,17 @@ import ReadBook from '@/views/ReadBook.vue'
 const routes = [
   {
     path: '/',
-    redirect: '/writer'  // 기본 진입 경로는 작가 대시보드
+    redirect: '/books'   // ✅ 메인화면을 기본 진입 경로로 설정
+  },
+  {
+    path: '/books',
+    name: 'Books',
+    component: () => import('@/views/Main.vue')
+  },
+  {
+  path: '/books/:title',
+  name: 'BookDetail',
+  component: () => import('@/views/BookDetail.vue')
   },
   {
     path: '/writer',
@@ -38,12 +48,13 @@ const routes = [
     component: ReadBook
   },
   {
-  path: '/writer/edit',
-  name: 'EditContent',
-  component: () => import('@/views/EditContent.vue')
+    path: '/writer/edit',
+    name: 'EditContent',
+    component: () => import('@/views/EditContent.vue')
   }
 ]
 
+// ✅ 이 부분 추가!
 const router = createRouter({
   history: createWebHistory(),
   routes

@@ -27,9 +27,19 @@
       <v-list-item to="/subscriber/read" link>
         <v-list-item-title>도서 열람</v-list-item-title>
       </v-list-item>
+
+      <v-divider class="my-2" />
+
+      <v-subheader>🌐 전체 메뉴</v-subheader>
+
+      <v-list-item to="/books" link>
+        <v-list-item-title>전체 도서 보기</v-list-item-title>
+      </v-list-item>
+
     </v-list>
   </v-navigation-drawer>
 </template>
+
 
 <script setup>
 </script>

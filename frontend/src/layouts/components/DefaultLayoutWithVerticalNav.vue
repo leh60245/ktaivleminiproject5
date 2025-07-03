@@ -13,18 +13,12 @@ import UserProfile from '@/layouts/components/UserProfile.vue'
     <!-- 👉 navbar -->
     <template #navbar="{ toggleVerticalOverlayNavActive }">
       <div class="d-flex h-100 align-center">
-        <!-- 👉 Vertical nav toggle in overlay mode -->
-        <IconBtn
-          class="ms-n3 d-lg-none"
-          @click="toggleVerticalOverlayNavActive(true)"
-        >
+        <IconBtn class="ms-n3 d-lg-none" @click="toggleVerticalOverlayNavActive(true)">
           <VIcon icon="mdi-menu" />
         </IconBtn>
 
         <VSpacer />
-
         <NavbarThemeSwitcher class="me-2" />
-
         <UserProfile />
       </div>
     </template>
@@ -33,8 +27,8 @@ import UserProfile from '@/layouts/components/UserProfile.vue'
       <DrawerContent />
     </template>
 
-    <!-- 👉 Pages -->
-    <slot />
+    <!-- ❗ 이 부분이 핵심 -->
+    <RouterView />
 
     <!-- 👉 Footer -->
     <template #footer>
@@ -42,6 +36,7 @@ import UserProfile from '@/layouts/components/UserProfile.vue'
     </template>
   </VerticalNavLayout>
 </template>
+
 
 <style lang="scss" scoped>
 </style>
