@@ -35,6 +35,8 @@ public class Publication {
 
     private Long authorId;
 
+    private Long manuscriptId; // 원고 ID 추가
+
     private String title;
 
     private String content;
@@ -53,6 +55,7 @@ public class Publication {
         publication.setStatus(PublicationStatus.PROCESSING);
 
         // 핵심 정보 설정
+        publication.setManuscriptId(event.getManuscriptId()); // manuscriptId 설정 추가
         publication.setAuthorId(event.getAuthorId());
         publication.setTitle(event.getTitle());
         publication.setContent(event.getContent());
@@ -77,7 +80,27 @@ public class Publication {
         return publication;
     }
 
+    // GPT 처리 완료 후 상태 업데이트 및 RegisterBookRequested 이벤트 발행
+    public void completeGptProcessing(String category, String summary, String coverImageUrl) {
+        // 1. GPT에서 생성된 내용으로 업데이트
+        this.category = category;
+        this.summary = summary;
+        this.coverImageUrl = coverImageUrl;
 
+        if (summary.equals("[요약 실패]") || coverImageUrl.contains("fail.jpg")) {
+            this.status = PublicationStatus.FAILED;
+        } else {
+            this.status = PublicationStatus.COMPLETED;
+            this.publishedDate = new Date();
+
+            // 성공한 경우에만 RegisterBookRequested 이벤트 발행
+            RegisterBookRequested registerBookRequested = new RegisterBookRequested(this);
+            registerBookRequested.publishAfterCommit();
+        }
+
+        // 2. DB 저장
+        repository().save(this);
+    }
 
 }
 //>>> DDD / Aggregate Root

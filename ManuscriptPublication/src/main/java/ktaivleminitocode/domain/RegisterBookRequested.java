@@ -10,6 +10,7 @@ import lombok.ToString;
 public class RegisterBookRequested extends AbstractEvent {
 
     private Long publicationRequestId;
+    private Long manuscriptId; // 원고 ID 추가
     private Long authorId;
     private String title;
     private String content;
@@ -20,6 +21,7 @@ public class RegisterBookRequested extends AbstractEvent {
     public RegisterBookRequested(Publication publication) {
         super(publication);
         this.publicationRequestId = publication.getPublicationRequestId();
+        this.manuscriptId = publication.getManuscriptId(); // 원고 ID 초기화
         this.authorId = publication.getAuthorId();
         this.title = publication.getTitle();
         this.content = publication.getContent();

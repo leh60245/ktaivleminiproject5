@@ -1,0 +1,76 @@
+{
+  "info": {
+    "name": "ManuscriptPublication API",
+    "description": "원고 출판 서비스 API 테스트 컬렉션",
+    "version": "1.0.0"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8086/actuator/health",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8086",
+          "path": ["actuator", "health"]
+        }
+      }
+    },
+    {
+      "name": "원고 등록",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"스프링 부트 마이크로서비스\",\n  \"content\": \"이 책은 MSA 구조로 스프링 부트를 활용한 실전 개발서입니다.\",\n  \"authorId\": 1\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8086/manuscripts",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8086",
+          "path": ["manuscripts"]
+        }
+      }
+    },
+    {
+      "name": "출판 요청",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}"
+        },
+        "url": {
+          "raw": "http://localhost:8086/manuscripts/{{manuscriptId}}/requestPublication",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8086",
+          "path": ["manuscripts", "{{manuscriptId}}", "requestPublication"]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "manuscriptId",
+      "value": "1"
+    }
+  ]
+}
+
