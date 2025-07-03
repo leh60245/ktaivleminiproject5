@@ -57,8 +57,7 @@
     />
 
     <div class="d-flex gap-4">
-      <v-btn color="grey" @click="saveDraft">임시저장</v-btn>
-      <v-btn color="primary" @click="submit">출간 요청</v-btn>
+      <v-btn color="grey" @click="saveDraft">저장</v-btn>
       <v-btn color="secondary" @click="previewAI">AI 미리보기</v-btn>
     </div>
   </div>
@@ -77,8 +76,30 @@ const keywords = ref([])
 const content = ref('')
 
 function saveDraft() {
-  alert('임시저장되었습니다 (추후 로컬/DB 저장 연동)')
+  if (!title.value || !content.value) {
+    alert('제목과 본문은 필수입니다.')
+    return
+  }
+
+  const post = {
+    id: Date.now(),
+    title: title.value,
+    category: category.value,
+    summary: summary.value,
+    keywords: keywords.value,
+    content: content.value,
+    date: new Date().toISOString().slice(0, 10),
+    status: 'draft',
+    coverImageUrl: null
+  }
+
+  const existing = JSON.parse(localStorage.getItem('writtenPosts') || '[]')
+  localStorage.setItem('writtenPosts', JSON.stringify([post, ...existing]))
+
+  alert('글이 저장되었습니다! 출간은 대시보드에서 진행해주세요.')
+  router.push('/writer')
 }
+
 function previewAI() {
   if (!title.value || !content.value) {
     alert("제목과 본문을 입력해주세요.")
@@ -92,27 +113,5 @@ function previewAI() {
       content: content.value
     }
   })
-}
-function submit() {
-  if (!title.value || !content.value) {
-    alert("제목과 본문은 필수입니다.")
-    return
-  }
-
-  const post = {
-    id: Date.now(),
-    title: title.value,
-    category: category.value,
-    summary: summary.value,
-    keywords: keywords.value,
-    content: content.value,
-    date: new Date().toISOString().slice(0, 10)
-  }
-
-  const existing = JSON.parse(localStorage.getItem('writtenPosts') || '[]')
-  localStorage.setItem('writtenPosts', JSON.stringify([post, ...existing]))
-
-  alert("출간 요청 완료!")
-  router.push('/writer')
 }
 </script>
