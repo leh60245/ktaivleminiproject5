@@ -1,4 +1,7 @@
 <script setup>
+import { ref } from 'vue'
+import RegisterModal from '@/views/RegisterModal.vue'
+
 const avatarBadgeProps = {
   dot: true,
   location: 'bottom right',
@@ -9,6 +12,11 @@ const avatarBadgeProps = {
 }
 
 const userName = "USER"
+const registerModalRef = ref()
+
+function openRegisterModal() {
+  registerModalRef.value.open()
+}
 </script>
 
 <template>
@@ -45,12 +53,24 @@ const userName = "USER"
             </template>
 
             <VListItemTitle class="font-weight-semibold">
-              
+              {{ userName }}
             </VListItemTitle>
           </VListItem>
 
           <VDivider class="my-2" />
-          
+
+          <!-- 👉 Register -->
+          <VListItem @click="openRegisterModal">
+            <template #prepend>
+              <VIcon
+                class="me-2"
+                icon="mdi-account-plus"
+                size="22"
+              />
+            </template>
+            <VListItemTitle>회원가입</VListItemTitle>
+          </VListItem>
+
           <!-- 👉 Logout -->
           <VListItem to="/login">
             <template #prepend>
@@ -60,7 +80,6 @@ const userName = "USER"
                 size="22"
               />
             </template>
-
             <VListItemTitle>Logout</VListItemTitle>
           </VListItem>
         </VList>
@@ -68,4 +87,7 @@ const userName = "USER"
       <!-- !SECTION -->
     </VAvatar>
   </VBadge>
+
+  <!-- 회원가입 모달 컴포넌트 -->
+  <RegisterModal ref="registerModalRef" />
 </template>
