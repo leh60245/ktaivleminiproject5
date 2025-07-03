@@ -43,7 +43,7 @@ spring:
 openai:
   api:
     url: ${OPENAI_API_URL:https://api.openai.com}
-    key: ${OPENAI_API_KEY}
+    key: ${OPENAI_API_KEY:sk-test-dummy-key-for-development-testing-only}
 
 logging:
   level:

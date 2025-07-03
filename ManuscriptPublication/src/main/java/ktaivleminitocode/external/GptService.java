@@ -58,6 +58,11 @@ public class GptService {
 
     // 내부 메서드 – ChatGPT 텍스트 생성
     private String callOpenAiTextApi(String prompt) {
+        // 테스트 환경에서 더미 키인 경우 더미 응답 반환
+        if (openAiApiKey.contains("dummy") || openAiApiKey.contains("test")) {
+            return "카테고리: 소설\n요약: 이것은 테스트용 더미 요약입니다. 실제 GPT API를 사용하지 않고 개발 환경에서 동작하기 위한 더미 응답입니다.";
+        }
+
         String url = openAiApiUrl + "/v1/chat/completions";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -79,6 +84,7 @@ public class GptService {
                 }
             }
         } catch (Exception e) {
+            System.err.println("GPT API 호출 실패: " + e.getMessage());
             return "[요약 실패]";
         }
         return "[요약 실패]";
@@ -86,6 +92,11 @@ public class GptService {
 
     // 내부 메서드 – 이미지 생성 (모델명 명시)
     private String callOpenAiImageApi(String prompt) {
+        // 테스트 환경에서 더미 키인 경우 더미 응답 반환
+        if (openAiApiKey.contains("dummy") || openAiApiKey.contains("test")) {
+            return "https://via.placeholder.com/1024x1024.png?text=Test+Cover+Image";
+        }
+
         String url = openAiApiUrl + "/v1/images/generations";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -105,6 +116,7 @@ public class GptService {
                 }
             }
         } catch (Exception e) {
+            System.err.println("GPT 이미지 생성 API 호출 실패: " + e.getMessage());
             return "https://fail.jpg";
         }
         return "https://fail.jpg";
