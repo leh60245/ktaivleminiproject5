@@ -52,31 +52,16 @@ public class PolicyHandler {
     ) {
         logger.info("\n\n🧠 [EVENT] GptContentGenerationStarted : {}\n", event);
 
-        publicationRepository.findById(event.getPublicationRequestId()).ifPresent(req -> {
-            Map<String, String> result = gptService.generateCategoryAndSummary(req.getTitle(), req.getContent());
+        publicationRepository.findById(event.getPublicationRequestId()).ifPresent(publication -> {
+            Map<String, String> result = gptService.generateCategoryAndSummary(publication.getTitle(), publication.getContent());
             String category = result.get("category");
             String summary = result.get("summary");
-            String coverImageUrl = gptService.generateCoverImage(req.getTitle(), category);
+            String coverImageUrl = gptService.generateCoverImage(publication.getTitle(), category);
 
-            req.setCategory(category);
-            req.setSummary(summary);
-            req.setCoverImageUrl(coverImageUrl);
+            // 도메인 애그리게이트의 메서드 호출로 변경
+            publication.completeGptProcessing(category, summary, coverImageUrl);
 
-            if (summary.equals("[요약 실패]") || coverImageUrl.contains("fail.jpg")) {
-                req.setStatus(PublicationStatus.FAILED);
-            } else {
-                req.setStatus(PublicationStatus.COMPLETED);
-                req.setPublishedDate(new java.util.Date()); // 출판 완료 시점 기록
-            }
-
-            publicationRepository.save(req);
-
-            logger.info("🎉 GPT 처리 완료 → category/summary/coverImageUrl 저장 완료");
-
-            RegisterBookRequested eventToSend = new RegisterBookRequested(req);
-            eventToSend.publishAfterCommit();
-
-            logger.info("📘 도서 등록 요청 이벤트 발행 완료 → RegisterBookRequested");
+            logger.info("🎉 GPT 처리 완료 → category/summary/coverImageUrl 저장 및 이벤트 발행 완료");
         });
     }
 }
