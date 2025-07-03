@@ -1,0 +1,13 @@
+# Maven 빌드 결과물 무시
+/target/
+
+# IDE 설정 파일 무시 (IntelliJ, Eclipse 등)
+*.iml
+.idea/
+*.classpath
+*.project
+*.settings/
+
+# OS별 임시 파일 무시
+.DS_Store
+Thumbs.db
