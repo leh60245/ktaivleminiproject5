@@ -22,6 +22,8 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long bookId;
 
+    private Long manuscriptId; // 원고 ID 추가
+
     private Long authorId;
 
     private String title;
@@ -77,24 +79,22 @@ public class Book {
 
     //<<< Clean Arch / Port Method
     public static void registerBook( // static 메서드는 외부 이벤트를 받아 Aggregate를 생성하거나 찾아서 처리할 때 사용
-        PublicationProcessingStarted publicationProcessingStarted
+        RegisterBookRequested registerBookRequested
     ) {
         //implement business logic here:
-        // 1. PublicationProcessingStarted 이벤트로부터 새로운 Book 애그리게이트 생성
+        // 1. RegisterBookRequested 이벤트로부터 새로운 Book 애그리게이트 생성
         Book book = new Book();
         // 이벤트의 데이터를 Book 애그리게이트에 매핑
-        book.setAuthorId(publicationProcessingStarted.getAuthorid());
-        book.setTitle(publicationProcessingStarted.getContent()); // 다이어그램에 content는 없으나 ManuscriptPublication에서 title로 사용될 가능성
-        // publicationProcessingStarted.getContent()가 'content'가 아니라 'title'일 가능성이 높음.
-        // 이벤트 스토밍 다이어그램의 '출간 완료됨' 이벤트 (출간 준비됨 이벤트와 유사)를 보면 title이 있음.
-        // 여기서는 title로 가정하고, 실제 ManuscriptPublication의 PublicationProcessingStarted 필드명을 확인해야 함.
-
-        book.setCategory(publicationProcessingStarted.getCategory());
-        book.setSummary(publicationProcessingStarted.getSummary());
-        book.setCoverImageUrl(publicationProcessingStarted.getCoverImageUrl());
+        book.setManuscriptId(registerBookRequested.getManuscriptId()); // 원고 ID 매핑 추가
+        book.setAuthorId(registerBookRequested.getAuthorId());
+        book.setTitle(registerBookRequested.getTitle());
+        book.setContent(registerBookRequested.getContent());
+        book.setCategory(registerBookRequested.getCategory());
+        book.setSummary(registerBookRequested.getSummary());
+        book.setCoverImageUrl(registerBookRequested.getCoverImageUrl());
         book.setPublishedDate(new Date()); // 현재 시간으로 출판일 기록
         book.setReadCount(0); // 초기 조회수는 0
-        book.setBestsellerBadge(false); // 초기에는 베스트셀러 아님
+        book.setBestsellerBadge(false); // 초기에는 베���트셀러 아님
 
         // 2. 생성된 Book 애그리게이트 저장
         repository().save(book);

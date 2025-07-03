@@ -25,15 +25,15 @@ public class PolicyHandler {
 
     @StreamListener(
         value = KafkaProcessor.INPUT,
-        condition = "headers['type']=='PublicationProcessingStarted'"
+        condition = "headers['type']=='RegisterBookRequested'"
     )
-    public void wheneverPublicationProcessingStarted_RegisterBook(
-        @Payload PublicationProcessingStarted publicationProcessingStarted
+    public void wheneverRegisterBookRequested_RegisterBook(
+        @Payload RegisterBookRequested registerBookRequested
     ) {
-        PublicationProcessingStarted event = publicationProcessingStarted;
+        RegisterBookRequested event = registerBookRequested;
         System.out.println(
             "\n\n##### listener RegisterBook : " +
-            publicationProcessingStarted +
+            registerBookRequested +
             "\n\n"
         );
 
