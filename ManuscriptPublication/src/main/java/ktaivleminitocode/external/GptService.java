@@ -10,6 +10,9 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.springframework.scheduling.annotation.Async;
+
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class GptService {
@@ -18,8 +21,8 @@ public class GptService {
 
     public GptService() {
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
-        factory.setConnectTimeout(12000); // 12초
-        factory.setReadTimeout(12000);    // 12초
+        factory.setConnectTimeout(30000); // 30초로 증가
+        factory.setReadTimeout(60000);    // 60초로 증가 (이미지 생성용)
         this.restTemplate = new RestTemplate(factory);
     }
 
@@ -50,8 +53,18 @@ public class GptService {
         return map;
     }
 
+    // 비동기 이미지 생성 메서드 추가
+    @Async
+    public CompletableFuture<String> generateCoverImageAsync(String title, String category) {
+        System.out.println("🎨 이미지 생성 시작: " + title + " (" + category + ")");
+        String imageUrl = generateCoverImage(title, category);
+        System.out.println("✅ 이미지 생성 완료: " + imageUrl);
+        return CompletableFuture.completedFuture(imageUrl);
+    }
+
     public String generateCoverImage(String title, String category) {
-        String prompt = category + " 장르에 어울리는 전자책 표지 이미지를 만들어줘. 세련된 일러스트 스타일로.";
+        String prompt = category + " 장르에 어울리는 전자책 표지 이미지를 만들어줘. 제목: " + title + ". 세련된 일러스트 스타일로.";
+        System.out.println("🎨 DALL-E 이미지 생성 요청: " + prompt);
         String imageUrl = callOpenAiImageApi(prompt);
         return imageUrl;
     }
@@ -68,7 +81,7 @@ public class GptService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(openAiApiKey);
         Map<String, Object> body = new HashMap<>();
-        body.put("model", "gpt-4.1-nano-2025-04-14");
+        body.put("model", "gpt-3.5-turbo");
         body.put("messages", new Object[]{
                 Map.of("role", "system", "content", "전자책 출판 플랫폼 요약 시스템입니다."),
                 Map.of("role", "user", "content", prompt)
@@ -94,9 +107,11 @@ public class GptService {
     private String callOpenAiImageApi(String prompt) {
         // 테스트 환경에서 더미 키인 경우 더미 응답 반환
         if (openAiApiKey.contains("dummy") || openAiApiKey.contains("test")) {
+            System.out.println("📷 테스트 모드: 더미 이미지 URL 반환");
             return "https://via.placeholder.com/1024x1024.png?text=Test+Cover+Image";
         }
 
+        System.out.println("🔄 DALL-E API 호출 중... (최대 60초 소요)");
         String url = openAiApiUrl + "/v1/images/generations";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -112,13 +127,15 @@ public class GptService {
             if (response.getStatusCode() == HttpStatus.OK) {
                 var data = (List<Map<String, Object>>) response.getBody().get("data");
                 if (data != null && !data.isEmpty()) {
-                    return data.get(0).get("url").toString();
+                    String resultUrl = data.get(0).get("url").toString();
+                    System.out.println("🎉 이미지 생성 성공: " + resultUrl);
+                    return resultUrl;
                 }
             }
         } catch (Exception e) {
-            System.err.println("GPT 이미지 생성 API 호출 실패: " + e.getMessage());
-            return "https://fail.jpg";
+            System.err.println("❌ GPT 이미지 생성 API 호출 실패: " + e.getMessage());
+            return "https://via.placeholder.com/1024x1024.png?text=Image+Generation+Failed";
         }
-        return "https://fail.jpg";
+        return "https://via.placeholder.com/1024x1024.png?text=No+Image";
     }
 }
