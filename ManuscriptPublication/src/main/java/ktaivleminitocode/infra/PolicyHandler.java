@@ -53,15 +53,52 @@ public class PolicyHandler {
         logger.info("\n\n🧠 [EVENT] GptContentGenerationStarted : {}\n", event);
 
         publicationRepository.findById(event.getPublicationRequestId()).ifPresent(publication -> {
+            // 1. 텍스트 처리 상태로 변경
+            publication.setStatus(PublicationStatus.TEXT_PROCESSING);
+            publicationRepository.save(publication);
+            logger.info("📝 텍스트 요약 생성 시작...");
+
+            // 2. 텍스트 요약 생성 (동기)
             Map<String, String> result = gptService.generateCategoryAndSummary(publication.getTitle(), publication.getContent());
             String category = result.get("category");
             String summary = result.get("summary");
-            String coverImageUrl = gptService.generateCoverImage(publication.getTitle(), category);
 
-            // 도메인 애그리게이트의 메서드 호출로 변경
-            publication.completeGptProcessing(category, summary, coverImageUrl);
+            // 3. 텍스트 처리 완료, 이미지 처리 상태로 변경
+            publication.setCategory(category);
+            publication.setSummary(summary);
+            publication.setStatus(PublicationStatus.IMAGE_PROCESSING);
+            publicationRepository.save(publication);
+            logger.info("✅ 텍스트 요약 완료. 🎨 이미지 생성 시작...");
 
-            logger.info("🎉 GPT 처리 완료 → category/summary/coverImageUrl 저장 및 이벤트 발행 완료");
+            // 4. 이미지 생성 (비동기) - 완료되면 자동으로 상태 업데이트
+            gptService.generateCoverImageAsync(publication.getTitle(), category)
+                    .thenAccept(coverImageUrl -> {
+                        logger.info("🎉 이미지 생성 완료: " + coverImageUrl);
+                        // 새로운 트랜잭션에서 처리
+                        try {
+                            Publication updatedPublication = publicationRepository.findById(publication.getPublicationRequestId()).orElse(null);
+                            if (updatedPublication != null) {
+                                updatedPublication.completeGptProcessing(category, summary, coverImageUrl);
+                                publicationRepository.save(updatedPublication);
+                                logger.info("✅ 출판 요청 처리 완료: ID=" + updatedPublication.getPublicationRequestId());
+                            }
+                        } catch (Exception e) {
+                            logger.error("❌ 출판 상태 업데이트 실패: " + e.getMessage());
+                        }
+                    })
+                    .exceptionally(throwable -> {
+                        logger.error("❌ 이미지 생성 실패: " + throwable.getMessage());
+                        try {
+                            Publication updatedPublication = publicationRepository.findById(publication.getPublicationRequestId()).orElse(null);
+                            if (updatedPublication != null) {
+                                updatedPublication.completeGptProcessing(category, summary, "https://via.placeholder.com/1024x1024.png?text=Image+Failed");
+                                publicationRepository.save(updatedPublication);
+                            }
+                        } catch (Exception e) {
+                            logger.error("❌ 실패 상태 업데이트 실패: " + e.getMessage());
+                        }
+                        return null;
+                    });
         });
     }
 }
