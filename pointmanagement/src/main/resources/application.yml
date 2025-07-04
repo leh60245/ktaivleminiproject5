@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8085
 
 spring:
   application:
@@ -45,10 +45,6 @@ logging:
     org.hibernate.type: trace
     org.springframework.cloud: debug
 
-
-server:
-  port: 8085
-
 ---
 
 spring:
@@ -63,7 +59,7 @@ spring:
     stream:
       kafka:
         binder:
-          brokers: my-kafka:9092
+          brokers: kafka:9092
         streams:
           binder:
             configuration:
@@ -80,5 +76,3 @@ spring:
         event-out:
           destination: ktaivleminitocode
           contentType: application/json
-
-

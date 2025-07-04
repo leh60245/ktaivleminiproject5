@@ -1,24 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: SubscriptionManagement
+  name: subscription-management
   labels:
-    app: SubscriptionManagement
+    app: subscription-management
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: SubscriptionManagement
+      app: subscription-management
   template:
     metadata:
       labels:
-        app: SubscriptionManagement
+        app: subscription-management
     spec:
       containers:
-        - name: SubscriptionManagement
-          image: "username/SubscriptionManagement:latest"
+        - name: subscription-management
+          image: "ktaivleminiproject5.azurecr.io/subscription-management:latest"
           ports:
             - containerPort: 8080
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "docker"
           readinessProbe:
             httpGet:
               path: '/actuator/health'
