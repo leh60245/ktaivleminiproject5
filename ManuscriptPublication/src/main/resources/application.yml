@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8086
 
 spring:
   application:
@@ -30,14 +30,10 @@ spring:
       bindings:
         event-in:
           group: ManuscriptPublication
-#<<< EDA / Topic Name
           destination: ktaivleminitocode
-#>>> EDA / Topic Name
           contentType: application/json
         event-out:
-#<<< EDA / Topic Name
           destination: ktaivleminitocode
-#>>> EDA / Topic Name
           contentType: application/json
 
 openai:
@@ -49,10 +45,6 @@ logging:
   level:
     org.hibernate.type: trace
     org.springframework.cloud: debug
-
-
-server:
-  port: 8086
 
 ---
 
@@ -68,7 +60,7 @@ spring:
     stream:
       kafka:
         binder:
-          brokers: my-kafka:9092
+          brokers: kafka:9092
         streams:
           binder:
             configuration:
@@ -85,3 +77,8 @@ spring:
         event-out:
           destination: ktaivleminitocode
           contentType: application/json
+
+openai:
+  api:
+    url: ${OPENAI_API_URL:https://api.openai.com}
+    key: ${OPENAI_API_KEY:sk-test-dummy-key-for-development-testing-only}

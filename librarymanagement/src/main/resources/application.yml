@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8084
 
 spring:
   application:
@@ -30,24 +30,16 @@ spring:
       bindings:
         event-in:
           group: librarymanagement
-#<<< EDA / Topic Name
           destination: ktaivleminitocode
-#>>> EDA / Topic Name
           contentType: application/json
         event-out:
-#<<< EDA / Topic Name
           destination: ktaivleminitocode
-#>>> EDA / Topic Name
           contentType: application/json
 
 logging:
   level:
     org.hibernate.type: trace
     org.springframework.cloud: debug
-
-
-server:
-  port: 8084
 
 ---
 
@@ -63,7 +55,7 @@ spring:
     stream:
       kafka:
         binder:
-          brokers: my-kafka:9092
+          brokers: kafka:9092
         streams:
           binder:
             configuration:
@@ -80,5 +72,3 @@ spring:
         event-out:
           destination: ktaivleminitocode
           contentType: application/json
-
-

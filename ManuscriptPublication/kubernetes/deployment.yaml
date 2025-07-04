@@ -1,28 +1,37 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ManuscriptPublication
+  name: manuscript-publication
   labels:
-    app: ManuscriptPublication
+    app: manuscript-publication
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ManuscriptPublication
+      app: manuscript-publication
   template:
     metadata:
       labels:
-        app: ManuscriptPublication
+        app: manuscript-publication
     spec:
       containers:
-        - name: ManuscriptPublication
-          image: "username/ManuscriptPublication:latest"
+        - name: manuscript-publication
+          image: "ktaivleminiproject5.azurecr.io/manuscript-publication:latest"
           ports:
-            - containerPort: 8080
+            - containerPort: 8086
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "docker"
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: openai-secret
+                  key: api-key
+                  optional: true
           readinessProbe:
             httpGet:
               path: '/actuator/health'
-              port: 8080
+              port: 8086
             initialDelaySeconds: 10
             timeoutSeconds: 2
             periodSeconds: 5
@@ -30,7 +39,7 @@ spec:
           livenessProbe:
             httpGet:
               path: '/actuator/health'
-              port: 8080
+              port: 8086
             initialDelaySeconds: 120
             timeoutSeconds: 2
             periodSeconds: 5

@@ -1,13 +1,14 @@
 server:
-  port: 8080
+  port: 8082
 
 spring:
   application:
     name: authormanagement
+
 ---
 
 spring:
-  profiles: docker
+  profiles: default
   jpa:
     properties:
       hibernate:
@@ -18,7 +19,7 @@ spring:
     stream:
       kafka:
         binder:
-          brokers: my-kafka:29092
+          brokers: localhost:9092
         streams:
           binder:
             configuration:
@@ -30,14 +31,10 @@ spring:
       bindings:
         event-in:
           group: AuthorManagement
-#<<< EDA / Topic Name
           destination: ktaivleminitocode
-#>>> EDA / Topic Name
           contentType: application/json
         event-out:
-#<<< EDA / Topic Name
           destination: ktaivleminitocode
-#>>> EDA / Topic Name
           contentType: application/json
 
 logging:
@@ -45,10 +42,6 @@ logging:
     org.hibernate.type: trace
     org.springframework.cloud: debug
 
-
-server:
-  port: 8082
-
 ---
 
 spring:
@@ -63,7 +56,7 @@ spring:
     stream:
       kafka:
         binder:
-          brokers: my-kafka:9092
+          brokers: kafka:9092
         streams:
           binder:
             configuration:
@@ -80,5 +73,3 @@ spring:
         event-out:
           destination: ktaivleminitocode
           contentType: application/json
-
-

@@ -14,7 +14,7 @@ spring:
           predicates:
             - Path=/authors/**, /authorStatistics/**
         - id: SubscriptionManagement
-          uri: http://localhost:8083
+          uri: http://localhost:8080
           predicates:
             - Path=/subscriptions/**, 
         - id: librarymanagement

@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: ManuscriptPublication
+  name: manuscript-publication
   labels:
-    app: ManuscriptPublication
+    app: manuscript-publication
 spec:
   ports:
-    - port: 8080
-      targetPort: 8080
+    - port: 8086
+      targetPort: 8086
   selector:
-    app: ManuscriptPublication
+    app: manuscript-publication

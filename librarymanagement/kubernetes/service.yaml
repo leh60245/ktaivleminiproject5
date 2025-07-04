@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: librarymanagement
+  name: library-management
   labels:
-    app: librarymanagement
+    app: library-management
 spec:
   ports:
-    - port: 8080
-      targetPort: 8080
+    - port: 8084
+      targetPort: 8084
   selector:
-    app: librarymanagement
+    app: library-management
